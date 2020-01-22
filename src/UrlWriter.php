@@ -9,7 +9,7 @@ use digidip\Loggers\NullLogger;
 class UrlWriter implements LoggerAwareInterface
 {
     /**
-     * @var Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -28,23 +28,29 @@ class UrlWriter implements LoggerAwareInterface
         RewriterStrategy $strategy,
         LoggerInterface $logger = null
     ) {
-        $this->setLogger($logger ?: new NullLogger());
         $this->strategy = $strategy;
         $this->circuitBreaker = $circuitBreaker;
+        $this->setLogger($logger ?: new NullLogger());
+        $this->logger->debug("UrlWriter::__construct() Called");
     }
 
     public function setLogger(LoggerInterface $logger) {
         $this->logger = $logger;
+        $this->circuitBreaker->setLogger($this->logger);
     }
 
     public function getUrl(string $urlToRewrite, array $additionalArguments = []): string {
+        $json = json_encode($additionalArguments);
+        $this->logger->debug("UrlWriter::getUrl({$urlToRewrite}, {$json}) called");
         $this->circuitBreaker->evaluateHealth();
 
         if ($this->circuitBreaker->isOpen()) {
-            $this->logger->warning('Circuit breaker is open, returning url without rewriting.');
+            $this->logger->debug("UrlWriter::getUrl(...) circuit is open, returning URL '{$urlToRewrite}'.");
             return $urlToRewrite;
         }
 
-        return $this->strategy->parse($urlToRewrite, $additionalArguments);
+        $url = $this->strategy->parse($urlToRewrite, $additionalArguments);
+        $this->logger->debug("UrlWriter::getUrl(...) circuit is closed, returning URL '{$url}'");
+        return $url;
     }
 }

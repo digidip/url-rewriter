@@ -23,10 +23,17 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 
 use digidip\Adapters\FileCircuitBreakerAdapter;
 use digidip\CircuitBreaker;
+use digidip\Loggers\NullLogger;
+use digidip\Loggers\StdioLogger;
 use digidip\Modules\Filesystem\TestFileReader;
 use digidip\Modules\Filesystem\TestFileWriter;
 use digidip\Strategies\TemplateRewriterStrategy;
 use digidip\UrlWriter;
+
+$logger = new NullLogger();
+if ($argc >= 2 && in_array('--debug', $argv)) {
+    $logger = new StdioLogger();
+}
 
 $buffer = '';
 $reader = new TestFileReader($buffer);
@@ -38,12 +45,15 @@ $circuit = new CircuitBreaker(
         CircuitBreaker::OPTION_FAILURE_THRESHOLD => 3,
         CircuitBreaker::OPTION_TIME_WINDOW => 3,
     ],
-    'http://127.0.0.1:1880/visit'
+    'http://127.0.0.1:1880/visit',
+    null,
+    $logger
 );
 
 $rewriter = new UrlWriter(
     $circuit,
-    new TemplateRewriterStrategy('http://visit.digidip.net/visit?url={url}')
+    new TemplateRewriterStrategy('http://visit.digidip.net/visit?url={url}'),
+    $logger
 );
 
 $count = 0;
@@ -64,7 +74,7 @@ while (true) {
 
     fwrite(STDOUT, "[\e[1m{$counter}\e[0m] --> Circuit Breaker is {$isOpen}, Failures: [{$failrecount}], SR: [{$sampleRate}] {$status} -- Rewritten URL: \e[1m\e[4m{$url}\e[0m\n");
 
-    if ($argc === 2 && $argv[1] === '--verbose') {
+    if ($argc >= 2 && in_array('--verbose', $argv)) {
         fwrite(STDOUT, "\n$buffer\n\n");
     }
 

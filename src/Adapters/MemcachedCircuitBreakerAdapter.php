@@ -2,7 +2,11 @@
 
 namespace digidip\Adapters;
 
-class MemcachedCircuitBreakerAdapter extends BaseCircuitBreakerAdapter
+use digidip\Loggers\NullLogger;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
+
+class MemcachedCircuitBreakerAdapter extends BaseCircuitBreakerAdapter implements LoggerAwareInterface
 {
     const MEMCACHED_CACHE_KEY = 'digidip/MemcachedCircuitBreakerAdpater';
 
@@ -16,14 +20,20 @@ class MemcachedCircuitBreakerAdapter extends BaseCircuitBreakerAdapter
      */
     private $memcachedCacheKey;
 
-    public function __construct(\Memcached $memcache, string $cachekey = self::MEMCACHED_CACHE_KEY)
+    public function __construct(\Memcached $memcache, string $cachekey = self::MEMCACHED_CACHE_KEY, ?LoggerInterface $logger = null)
     {
         $this->memcache = $memcache;
         $this->memcachedCacheKey = $cachekey;
+        $this->logger = $logger ?? new NullLogger();
+    }
+
+    public function setLogger(LoggerInterface $logger) {
+        $this->logger = $logger;
     }
 
     function persist(): void
     {
+        $this->logger->debug("MemcachedCircuitBreakerAdapter::persist() Called");
         $this->memcache->set($this->memcachedCacheKey, json_encode($this->payload()));
     }
 
@@ -33,14 +43,12 @@ class MemcachedCircuitBreakerAdapter extends BaseCircuitBreakerAdapter
     public function initialise(): bool
     {
         if (!$this->memcache->get($this->memcachedCacheKey)) {
-
-            // @todo file system error management improvement here, make sure we prevent the app from crashing (with options).
-
-            // create new file
+            $this->logger->debug("MemcachedCircuitBreakerAdapter::initialise() No existing storage found.");
             $this->memcache->set($this->memcachedCacheKey, json_encode($this->payload()));
             return false;
         }
 
+        $this->logger->debug("MemcachedCircuitBreakerAdapter::initialise() Storage found, reading state into memory.");
         $data = json_decode($this->memcache->get($this->memcachedCacheKey), true);
         $this->isOpen = $data['isOpen'] ?? $this->isOpen;
         $this->lastError = $data['lastError'] ?? $this->lastError;

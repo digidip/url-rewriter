@@ -22,4 +22,12 @@ class TestFileReader implements FileReader
     {
         return mb_strlen($this->data) > 0;
     }
+
+    public function path(): string {
+        return 'testing - N/A';
+    }
+
+    function isReadable(): bool {
+        return true;
+    }
 }

@@ -6,7 +6,7 @@ use digidip\Modules\Filesystem\Contracts\FileReader;
 
 class StandardFileReader implements FileReader {
     /**
-     * @var strinf
+     * @var string
      */
     private $path;
 
@@ -20,5 +20,13 @@ class StandardFileReader implements FileReader {
 
     function exists(): bool {
         return file_exists($this->path);
+    }
+
+    public function path(): string {
+        return $this->path;
+    }
+
+    function isReadable(): bool {
+        return is_readable($this->path);
     }
 }
