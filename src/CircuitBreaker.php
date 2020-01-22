@@ -82,6 +82,7 @@ class CircuitBreaker implements LoggerAwareInterface
 
     public function evaluateHealth(): void {
         $this->logger->debug("CircuitBreaker::evaluateHealth() called.");
+        $this->adapter->load();
 
         $now = (new \DateTime())->getTimestamp() - $this->adapter->getSampleRate();
         $last = $this->adapter->getLastSampleTimestamp();

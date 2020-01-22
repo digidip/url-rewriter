@@ -14,8 +14,8 @@ class StandardFileWriter implements FileWriter {
         $this->path = $path;
     }
 
-    function writer(string $content): void {
-        file_put_contents($this->path, $content);
+    function write(string $content): void {
+        file_put_contents($this->path, $content, LOCK_EX);
     }
 
     public function path(): string {
@@ -24,6 +24,6 @@ class StandardFileWriter implements FileWriter {
 
     function isWritable(): bool
     {
-        return is_writable($this->path);
+        return is_writable(dirname($this->path));
     }
 }

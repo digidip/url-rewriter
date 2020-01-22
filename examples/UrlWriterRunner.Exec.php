@@ -22,9 +22,12 @@
 require_once(__DIR__ . '/../vendor/autoload.php');
 
 use digidip\Adapters\FileCircuitBreakerAdapter;
+use digidip\Adapters\FilePathCircuitBreakerAdapter;
 use digidip\CircuitBreaker;
 use digidip\Loggers\NullLogger;
 use digidip\Loggers\StdioLogger;
+use digidip\Modules\Filesystem\StandardFileReader;
+use digidip\Modules\Filesystem\StandardFileWriter;
 use digidip\Modules\Filesystem\TestFileReader;
 use digidip\Modules\Filesystem\TestFileWriter;
 use digidip\Strategies\TemplateRewriterStrategy;
@@ -35,30 +38,30 @@ if ($argc >= 2 && in_array('--debug', $argv)) {
     $logger = new StdioLogger();
 }
 
-$buffer = '';
-$reader = new TestFileReader($buffer);
-$writer = new TestFileWriter($buffer);
-$adapter = new FileCircuitBreakerAdapter($reader, $writer);
-$circuit = new CircuitBreaker(
-    $adapter,
-    [
-        CircuitBreaker::OPTION_FAILURE_THRESHOLD => 3,
-        CircuitBreaker::OPTION_TIME_WINDOW => 3,
-    ],
-    'http://127.0.0.1:1880/visit',
-    null,
-    $logger
-);
-
-$rewriter = new UrlWriter(
-    $circuit,
-    new TemplateRewriterStrategy('http://visit.digidip.net/visit?url={url}'),
-    $logger
-);
-
+// $buffer = '';
 $count = 0;
-$lastSample = $adapter->getLastSampleTimestamp();
+$lastSample = null;
 while (true) {
+    // $reader = new StandardFileReader($buffer);
+    // $writer = new StandardFileWriter($buffer);
+    $adapter = new FilePathCircuitBreakerAdapter(__DIR__ . '/data.json');
+    $circuit = new CircuitBreaker(
+        $adapter,
+        [
+            CircuitBreaker::OPTION_FAILURE_THRESHOLD => 3,
+            CircuitBreaker::OPTION_TIME_WINDOW => 3,
+        ],
+        'http://127.0.0.1:1880/visit',
+        null,
+        $logger
+    );
+
+    $rewriter = new UrlWriter(
+        $circuit,
+        new TemplateRewriterStrategy('http://visit.digidip.net/visit?url={url}'),
+        $logger
+    );
+
     $url = $rewriter->getUrl('http://www.merchant.com', []);
     $isOpen = ($circuit->isOpen() === true) ? "\e[41m\e[30m  Open  \e[0m" : "\e[42m\e[30m Closed \e[0m";
     $failrecount = $adapter->getFailureCount() > 0 ? "\e[93m{$adapter->getFailureCount()}\e[0m" : "\e[92m{$adapter->getFailureCount()}\e[0m";

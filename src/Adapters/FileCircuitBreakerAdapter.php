@@ -52,8 +52,9 @@ class FileCircuitBreakerAdapter extends BaseCircuitBreakerAdapter implements Log
             $this->logger->debug("FileCircuitBreakerAdapter::initialise() No existing file found.");
 
             if (!$this->writer->isWritable()) {
-                $this->logger->critical("No write access for file path: {$this->writer->path()}");
-                throw new \Exception("No write access for file path: {$this->writer->path()}");
+                $path = dirname($this->writer->path());
+                $this->logger->critical("No write access for file path: {$path}");
+                throw new \Exception("No write access for file path: {$path}");
             }
 
             // create new file
@@ -67,15 +68,21 @@ class FileCircuitBreakerAdapter extends BaseCircuitBreakerAdapter implements Log
         }
 
         $this->logger->debug("FileCircuitBreakerAdapter::initialise() File found, reading state into memory.");
-        $data = json_decode($this->reader->read(), true);
-        $this->isOpen = $data['isOpen'] ?? $this->isOpen;
-        $this->lastError = $data['lastError'] ?? $this->lastError;
-        $this->failureCount = $data['failureCount'] ?? $this->failureCount;
-        $this->lastFailureTimestamp = $data['lastFailureTimestamp'] ?? $this->lastFailureTimestamp;
-        $this->lastSampleTimestamp = $data['lastSampleTimestamp'] ?? $this->lastSampleTimestamp;
-        $this->sampleRate = $data['sampleRate'] ?? $this->defaultSampleRate;
+        $this->load();
 
         return true;
+    }
+
+    public function load(): void {
+        $data = json_decode($this->reader->read(), true);
+        if ($data) {
+            $this->isOpen = $data['isOpen'] ?? $this->isOpen;
+            $this->lastError = $data['lastError'] ?? $this->lastError;
+            $this->failureCount = $data['failureCount'] ?? $this->failureCount;
+            $this->lastFailureTimestamp = $data['lastFailureTimestamp'] ?? $this->lastFailureTimestamp;
+            $this->lastSampleTimestamp = $data['lastSampleTimestamp'] ?? $this->lastSampleTimestamp;
+            $this->sampleRate = $data['sampleRate'] ?? $this->sampleRate;
+        }
     }
 
     private function payload(): array {

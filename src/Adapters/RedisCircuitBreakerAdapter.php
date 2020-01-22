@@ -49,15 +49,21 @@ class RedisCircuitBreakerAdapter extends BaseCircuitBreakerAdapter implements Lo
         }
 
         $this->logger->debug("RedisCircuitBreakerAdapter::initialise() Storage found, reading state into memory.");
-        $data = json_decode($this->redis->get($this->redisCacheKey), true);
-        $this->isOpen = $data['isOpen'] ?? $this->isOpen;
-        $this->lastError = $data['lastError'] ?? $this->lastError;
-        $this->failureCount = $data['failureCount'] ?? $this->failureCount;
-        $this->lastFailureTimestamp = $data['lastFailureTimestamp'] ?? $this->lastFailureTimestamp;
-        $this->lastSampleTimestamp = $data['lastSampleTimestamp'] ?? $this->lastSampleTimestamp;
-        $this->sampleRate = $data['sampleRate'] ?? $this->defaultSampleRate;
+        $this->load();
 
         return true;
+    }
+
+    public function load(): void {
+        $data = json_decode($this->redis->get($this->redisCacheKey), true);
+        if ($data) {
+            $this->isOpen = $data['isOpen'] ?? $this->isOpen;
+            $this->lastError = $data['lastError'] ?? $this->lastError;
+            $this->failureCount = $data['failureCount'] ?? $this->failureCount;
+            $this->lastFailureTimestamp = $data['lastFailureTimestamp'] ?? $this->lastFailureTimestamp;
+            $this->lastSampleTimestamp = $data['lastSampleTimestamp'] ?? $this->lastSampleTimestamp;
+            $this->sampleRate = $data['sampleRate'] ?? $this->sampleRate;
+        }
     }
 
     private function payload(): array {

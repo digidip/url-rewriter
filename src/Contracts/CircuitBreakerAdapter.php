@@ -22,5 +22,6 @@ interface CircuitBreakerAdapter {
     function getLastSampleTimestamp(): ?int;
 
     function persist(): void;
+    function load(): void;
     function initialise(): bool;
 }
