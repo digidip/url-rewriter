@@ -12,7 +12,6 @@ use Psr\Log\LoggerInterface;
 class CircuitBreaker implements LoggerAwareInterface
 {
     const OPTION_TIMEOUT = 'timeout';
-    const OPTION_TIME_WINDOW = 'timeWindow';
     const OPTION_FAILURE_THRESHOLD = 'failureThreshold';
     const OPTION_OPENED_SAMPLE_RATE = 'openedSampleRate';
     const OPTION_CLOSED_SAMPLE_RATE = 'closedSampleRate';
@@ -21,10 +20,9 @@ class CircuitBreaker implements LoggerAwareInterface
 
     const DEFAULT_OPTIONS = [
         self::OPTION_TIMEOUT => 1000, // number of milliseconds to wait before the HTTP connection times out.
-        self::OPTION_TIME_WINDOW => 10, // time window in seconds, if the number of failures goes beyound `failureThresold` within this specified time window, the circuit will be opened.
         self::OPTION_FAILURE_THRESHOLD => 5, // number of failure events before opening circuit.
-        self::OPTION_OPENED_SAMPLE_RATE => 1, // number of seconds before testing service while the circuit is open.
-        self::OPTION_CLOSED_SAMPLE_RATE => 5, // number of seconds before testing service while the circuit is closed.
+        self::OPTION_OPENED_SAMPLE_RATE => 1, // number of seconds before testing service while the circuit is producing failures.
+        self::OPTION_CLOSED_SAMPLE_RATE => 5, // number of seconds before testing service while the circuit is in a healthy state (failure count === 0)
 
         // Testing options
         self::OPTION_TESTING_SUCCESS_TIMESTAMP => null,
@@ -154,8 +152,7 @@ class CircuitBreaker implements LoggerAwareInterface
             return; // service is operational.
         }
 
-        $cutOff = (new \DateTime())->getTimestamp() - $this->options[self::OPTION_TIME_WINDOW];
-        if ($lastFailure !== null && $this->adapter->getFailureCount() === 0) { //$cutOff > $lastFailure) {
+        if ($lastFailure !== null && $this->adapter->getFailureCount() === 0) {
             $this->logger->debug("CircuitBreaker::inspectCircuit() Service has been restored to normal, closing circuit.");
 
             // no new errors within the last sample window
@@ -165,7 +162,7 @@ class CircuitBreaker implements LoggerAwareInterface
             return;
         }
 
-        if ($lastFailure !== null && $cutOff < $lastFailure && $this->adapter->getFailureCount() >= $this->options[self::OPTION_FAILURE_THRESHOLD]) {
+        if ($lastFailure !== null && $this->adapter->getFailureCount() >= $this->options[self::OPTION_FAILURE_THRESHOLD]) {
             $this->logger->debug("CircuitBreaker::inspectCircuit() Detected service issues, opening circuit.");
 
             // To many failures have been observed

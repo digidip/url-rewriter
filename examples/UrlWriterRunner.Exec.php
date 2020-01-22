@@ -49,7 +49,6 @@ while (true) {
         $adapter,
         [
             CircuitBreaker::OPTION_FAILURE_THRESHOLD => 3,
-            CircuitBreaker::OPTION_TIME_WINDOW => 3,
         ],
         'http://127.0.0.1:1880/visit',
         null,

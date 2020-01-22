@@ -60,7 +60,6 @@ class UrlWriterTest extends TestCase
                 CircuitBreaker::OPTION_FAILURE_THRESHOLD => 3,
                 CircuitBreaker::OPTION_TESTING_SUCCESS_TIMESTAMP => &$timestamp,
                 CircuitBreaker::OPTION_TESTING_FAILURE_TIMESTAMP => &$timestamp,
-                CircuitBreaker::OPTION_TIME_WINDOW => 30,
             ],
             null,
             $client
