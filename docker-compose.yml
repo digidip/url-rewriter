@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  node-red:
+    image: nodered/node-red
+    container_name: nodered.container.local
+    environment:
+      - TZ=Europe/Berlin
+    networks:
+      - digidipnet
+    volumes:
+      - ./docker/node-red-data:/data
+    ports:
+      - "1880:1880"
+
+networks:
+  digidipnet:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local
