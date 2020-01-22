@@ -102,7 +102,7 @@ class RedisCircuitBreakerAdapterTest extends TestCase
 
         $now = new DateTime();
         $adapter->setSampleRate(1);
-        $adapter->registerFailure($now);
+        $adapter->registerFailure(3, $now);
         $adapter->setError('Test error');
 
         $redis->shouldReceive('set')->once()->with(
@@ -115,7 +115,7 @@ class RedisCircuitBreakerAdapterTest extends TestCase
 
         $now1 = (new DateTime())->modify('+5 seconds');
         $adapter->setSampleRate(5);
-        $adapter->registerSuccess($now1);
+        $adapter->registerSuccess(3, $now1);
 
         $redis->shouldReceive('set')->once()->with(
             self::TESTING_CACHE_KEY,

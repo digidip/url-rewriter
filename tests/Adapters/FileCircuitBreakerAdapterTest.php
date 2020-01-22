@@ -68,7 +68,7 @@ class FileCircuitBreakerAdapterTest extends TestCase
 
         $now = new DateTime();
         $adapter->setSampleRate(1);
-        $adapter->registerFailure($now);
+        $adapter->registerFailure(3, $now);
         $adapter->setError('Test error');
         $adapter->persist();
         $this->assertEquals($now->getTimestamp(), $adapter->getLastSampleTimestamp());
@@ -77,7 +77,7 @@ class FileCircuitBreakerAdapterTest extends TestCase
 
         $now1 = (new DateTime())->modify('+5 seconds');
         $adapter->setSampleRate(5);
-        $adapter->registerSuccess($now1);
+        $adapter->registerSuccess(3, $now1);
         $adapter->persist();
         $this->assertEquals('{"isOpen":null,"lastError":"Test error","failureCount":0,"lastFailureTimestamp":'. $now->getTimestamp() .',"lastSampleTimestamp":'. $now1->getTimestamp() .',"sampleRate":5}', $buffer);
 

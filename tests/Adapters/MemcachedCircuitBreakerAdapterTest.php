@@ -95,7 +95,7 @@ class MemcachedCircuitBreakerAdapterTest extends TestCase
         $stub->method('getTimestamp')->willReturn(10000);
         $now = new DateTime();
         $adapter->setSampleRate(1);
-        $adapter->registerFailure($now);
+        $adapter->registerFailure(3, $now);
         $adapter->setError('Test error');
 
         $memcached->shouldReceive('set')->once()->with(
@@ -108,7 +108,7 @@ class MemcachedCircuitBreakerAdapterTest extends TestCase
 
         $now1 = (new DateTime())->modify('+5 seconds');
         $adapter->setSampleRate(5);
-        $adapter->registerSuccess($now1);
+        $adapter->registerSuccess(3, $now1);
 
         $memcached->shouldReceive('set')->once()->with(
             self::TESTING_CACHE_KEY,

@@ -110,22 +110,22 @@ class CircuitBreakerTest extends TestCase
         $timestamp = $timestamp->modify('-2 seconds');
         $circuitBreaker->evaluateHealth();
 
-        $this->assertEquals(4, $adapter->getFailureCount());
-        $this->assertEquals('{"isOpen":true,"lastError":"Client error: `HEAD https:\/\/visit.digidip.net\/digi-health-check.php` resulted in a `404 Not Found` response","failureCount":4,"lastFailureTimestamp":' . $timestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":1}', $buffer);
+        $this->assertEquals(3, $adapter->getFailureCount());
+        $this->assertEquals('{"isOpen":true,"lastError":"Client error: `HEAD https:\/\/visit.digidip.net\/digi-health-check.php` resulted in a `404 Not Found` response","failureCount":3,"lastFailureTimestamp":' . $timestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":1}', $buffer);
 
         // Close circuit
         $lastFailureTimestamp = clone $timestamp;
         $timestamp = $timestamp->modify('-3 seconds');
         $circuitBreaker->evaluateHealth();
-        $this->assertEquals('{"isOpen":true,"lastError":"Client error: `HEAD https:\/\/visit.digidip.net\/digi-health-check.php` resulted in a `404 Not Found` response","failureCount":3,"lastFailureTimestamp":' . $lastFailureTimestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":3}', $buffer);
+        $this->assertEquals('{"isOpen":true,"lastError":"Client error: `HEAD https:\/\/visit.digidip.net\/digi-health-check.php` resulted in a `404 Not Found` response","failureCount":2,"lastFailureTimestamp":' . $lastFailureTimestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":1}', $buffer);
 
         $timestamp = $timestamp->modify('-3 seconds');
         $circuitBreaker->evaluateHealth();
-        $this->assertEquals('{"isOpen":true,"lastError":"Client error: `HEAD https:\/\/visit.digidip.net\/digi-health-check.php` resulted in a `404 Not Found` response","failureCount":2,"lastFailureTimestamp":' . $lastFailureTimestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":3}', $buffer);
+        $this->assertEquals('{"isOpen":true,"lastError":"Client error: `HEAD https:\/\/visit.digidip.net\/digi-health-check.php` resulted in a `404 Not Found` response","failureCount":1,"lastFailureTimestamp":' . $lastFailureTimestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":1}', $buffer);
 
         $timestamp = $timestamp->modify('-3 seconds');
         $circuitBreaker->evaluateHealth();
-        $this->assertEquals('{"isOpen":true,"lastError":"Client error: `HEAD https:\/\/visit.digidip.net\/digi-health-check.php` resulted in a `404 Not Found` response","failureCount":1,"lastFailureTimestamp":' . $lastFailureTimestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":3}', $buffer);
+        $this->assertEquals('{"isOpen":false,"lastError":null,"failureCount":0,"lastFailureTimestamp":null,"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":3}', $buffer);
 
         $timestamp = $timestamp->modify('-3 seconds');
         $circuitBreaker->evaluateHealth();
@@ -149,7 +149,7 @@ class CircuitBreakerTest extends TestCase
         $timestamp = $timestamp->modify('-1 seconds');
 
         $circuitBreaker->evaluateHealth();
-        $this->assertEquals(4, $adapter->getFailureCount());
-        $this->assertEquals('{"isOpen":true,"lastError":"Timeout failure","failureCount":4,"lastFailureTimestamp":' . $timestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":1}', $buffer);
+        $this->assertEquals(3, $adapter->getFailureCount());
+        $this->assertEquals('{"isOpen":true,"lastError":"Timeout failure","failureCount":3,"lastFailureTimestamp":' . $timestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":1}', $buffer);
     }
 }

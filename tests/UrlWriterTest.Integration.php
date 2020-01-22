@@ -102,7 +102,7 @@ class UrlWriterTest extends TestCase
         // var_dump($buffer, $timestamp->getTimestamp());
 
         $timestamp = $timestamp->modify('-1 seconds');
-        $this->assertEquals('http://www.mymerchant.com', $urlWriter->getUrl('http://www.mymerchant.com'));
+        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $urlWriter->getUrl('http://www.mymerchant.com'));
         // var_dump($buffer, $timestamp->getTimestamp());
 
         $timestamp = $timestamp->modify('-1 seconds');
