@@ -9,6 +9,9 @@
             "email": "jeramy@digidip.net"
         }
     ],
+    "support": {
+        "issues": "https://github.com/digidip/url-rewriter/issues"
+    },
     "require": {
         "php": ">=7.1",
         "psr/log": "^1.1",
