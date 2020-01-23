@@ -18,6 +18,11 @@ jobs:
             - name: Validate composer.json and composer.lock
               run: composer validate
 
+            - name: Setup PHP
+              uses: ./
+              with:
+                  php-version: ${{ matrix.php }}
+
             - name: Install dependencies
               run: composer install --prefer-dist --no-progress --no-suggest
 
