@@ -16,6 +16,21 @@ This library was created to allow digidip customers to rewrite their affiliate U
 
 If the circuit is open, it means that the transaction can not be tracked by digidip, although a majority of users will experience a positive redirection to the merchant's page instead of experiencing a error page.
 
+```php
+// Basic example of the implementation.
+
+$redis = new \Redis();
+$redis->connect('....');
+
+$adapter = new RedisCircuitBreakerAdapter($redis);
+$circuit = new CircuitBreaker($adapter);
+$rewriter = new UrlRewriter($circuit, new DigidipSubdomainRewriterStrategy('mydomain'));
+
+$url = $rewriter->getUrl('http://www.merchant.com');
+
+// ... $url is used elsewhere as part of your implementation...
+```
+
 ## Key Concepts
 
 - An explanation of the [circuit breaker pattern](https://martinfowler.com/bliki/CircuitBreaker.html).
@@ -84,6 +99,12 @@ Currently available adapters include:
 ## Installation
 
 Execute `composer require digidip/url-rewriter` in your project.
+
+### Dependancies
+
+If you wish to use the Memcached or Redis adapter you must install either PECL extensions:
+- Redis         (`pecl install redis`)
+- Memcached     (`pecl install memcached`)
 
 ## Examples
 

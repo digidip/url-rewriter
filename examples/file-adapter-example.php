@@ -6,7 +6,7 @@ use digidip\Adapters\FileCircuitBreakerAdapter;
 use digidip\CircuitBreaker;
 use digidip\Modules\Filesystem\StandardFileReader;
 use digidip\Modules\Filesystem\StandardFileWriter;
-use digidip\Strategies\DigidipRewriterStrategy;
+use digidip\Strategies\DigidipSubdomainRewriterStrategy;
 use digidip\UrlRewriter;
 
 $adapter = new FileCircuitBreakerAdapter(
@@ -14,7 +14,7 @@ $adapter = new FileCircuitBreakerAdapter(
     new StandardFileWriter('/tmp/digidip-circuit.json')
 );
 $circuit = new CircuitBreaker($adapter);
-$rewriter = new UrlRewriter($circuit, new DigidipRewriterStrategy(12345));
+$rewriter = new UrlRewriter($circuit, new DigidipSubdomainRewriterStrategy('mydomain'));
 
 $url = $rewriter->getUrl('http://www.merchant.com', []);
 
