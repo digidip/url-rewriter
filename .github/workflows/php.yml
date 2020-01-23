@@ -3,10 +3,17 @@ name: URL Rewriter Testing
 on: [push]
 
 jobs:
-    build:
+    run_tests:
+        name: Run Tests for PHP 7.1 to 7.4.
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                php: [7.1, 7.2, 7.3, 7.4]
+
+            fail-fast: false
         steps:
-            - uses: actions/checkout@v1
+            - name: Checkout
+              uses: actions/checkout@master
 
             - name: Validate composer.json and composer.lock
               run: composer validate
@@ -16,7 +23,3 @@ jobs:
 
             - name: Run PHPUnit test suite
               run: vendor/bin/phpunit
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
-    # - name: Run test suite
-    #   run: composer run-script test
