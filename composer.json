@@ -1,6 +1,6 @@
 {
     "name": "digidip/url-rewriter",
-    "description": "Rewrite a URL to a Digidip visit URL with a circuit breaker to minimise failed redirects.",
+    "description": "digidip URL Rewriter with a circuit breaker.",
     "type": "library",
     "license": "MIT",
     "authors": [
