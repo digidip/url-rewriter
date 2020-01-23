@@ -1,5 +1,7 @@
 <?php
 
+require_once(__DIR__ . '/../vendor/autoload.php');
+
 use digidip\Adapters\FileCircuitBreakerAdapter;
 use digidip\CircuitBreaker;
 use digidip\Modules\Filesystem\StandardFileReader;
@@ -15,3 +17,5 @@ $circuit = new CircuitBreaker($adapter);
 $rewriter = new UrlRewriter($circuit, new DigidipRewriterStrategy(12345));
 
 $url = $rewriter->getUrl('http://www.merchant.com', []);
+
+var_dump($url);
