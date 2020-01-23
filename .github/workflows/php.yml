@@ -4,11 +4,11 @@ on: [push]
 
 jobs:
     run_tests:
-        name: Run Tests for PHP 7.1 to 7.4.
+        name: Run Tests for PHP 7.2 to 7.4.
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                php: [ '7.1', '7.2', '7.3', '7.4' ]
+                php: [ '7.2', '7.3', '7.4' ]
 
             fail-fast: false
         steps:
