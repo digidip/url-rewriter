@@ -11,14 +11,14 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use digidip\UrlWriter;
+use digidip\UrlRewriter;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 /**
  * CircuitBreakerTest
  * @group digidip
  */
-class UrlWriterTest extends TestCase
+class UrlRewriterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     /**
@@ -65,55 +65,55 @@ class UrlWriterTest extends TestCase
             $client
         );
 
-        $urlWriter = new UrlWriter(
+        $UrlRewriter = new UrlRewriter(
             $circuitBreaker,
             new TemplateRewriterStrategy('http://localhost/visit?url={url}', [])
         );
 
         $timestamp = $timestamp->modify('-3 seconds');
-        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $urlWriter->getUrl('http://www.mymerchant.com'));
+        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $UrlRewriter->getUrl('http://www.mymerchant.com'));
         // var_dump($buffer, $timestamp->getTimestamp());
 
         $timestamp = $timestamp->modify('-3 seconds');
-        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $urlWriter->getUrl('http://www.mymerchant.com'));
+        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $UrlRewriter->getUrl('http://www.mymerchant.com'));
         // var_dump($buffer, $timestamp->getTimestamp());
 
         $timestamp = $timestamp->modify('-2 seconds');
-        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $urlWriter->getUrl('http://www.mymerchant.com'));
+        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $UrlRewriter->getUrl('http://www.mymerchant.com'));
         // var_dump($buffer, $timestamp->getTimestamp());
 
         $timestamp = $timestamp->modify('-1 seconds');
-        $this->assertEquals('http://www.mymerchant.com', $urlWriter->getUrl('http://www.mymerchant.com'));
+        $this->assertEquals('http://www.mymerchant.com', $UrlRewriter->getUrl('http://www.mymerchant.com'));
         // var_dump($buffer, $timestamp->getTimestamp());
 
         $timestamp = $timestamp->modify('-1 seconds');
-        $this->assertEquals('http://www.mymerchant.com', $urlWriter->getUrl('http://www.mymerchant.com'));
-        // var_dump($buffer, $timestamp->getTimestamp());
-
-
-        $timestamp = $timestamp->modify('-1 seconds');
-        $this->assertEquals('http://www.mymerchant.com', $urlWriter->getUrl('http://www.mymerchant.com'));
+        $this->assertEquals('http://www.mymerchant.com', $UrlRewriter->getUrl('http://www.mymerchant.com'));
         // var_dump($buffer, $timestamp->getTimestamp());
 
 
         $timestamp = $timestamp->modify('-1 seconds');
-        $this->assertEquals('http://www.mymerchant.com', $urlWriter->getUrl('http://www.mymerchant.com'));
+        $this->assertEquals('http://www.mymerchant.com', $UrlRewriter->getUrl('http://www.mymerchant.com'));
+        // var_dump($buffer, $timestamp->getTimestamp());
+
+
+        $timestamp = $timestamp->modify('-1 seconds');
+        $this->assertEquals('http://www.mymerchant.com', $UrlRewriter->getUrl('http://www.mymerchant.com'));
         // var_dump($buffer, $timestamp->getTimestamp());
 
         $timestamp = $timestamp->modify('-1 seconds');
-        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $urlWriter->getUrl('http://www.mymerchant.com'));
+        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $UrlRewriter->getUrl('http://www.mymerchant.com'));
         // var_dump($buffer, $timestamp->getTimestamp());
 
         $timestamp = $timestamp->modify('-1 seconds');
-        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $urlWriter->getUrl('http://www.mymerchant.com'));
+        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $UrlRewriter->getUrl('http://www.mymerchant.com'));
 
         $timestamp = $timestamp->modify('-1 seconds');
-        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $urlWriter->getUrl('http://www.mymerchant.com'));
+        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $UrlRewriter->getUrl('http://www.mymerchant.com'));
 
         $timestamp = $timestamp->modify('-1 seconds');
-        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $urlWriter->getUrl('http://www.mymerchant.com'));
+        $this->assertEquals('http://localhost/visit?url=http%3A%2F%2Fwww.mymerchant.com', $UrlRewriter->getUrl('http://www.mymerchant.com'));
 
         $timestamp = $timestamp->modify('-1 seconds');
-        $this->assertEquals('http://www.mymerchant.com', $urlWriter->getUrl('http://www.mymerchant.com'));
+        $this->assertEquals('http://www.mymerchant.com', $UrlRewriter->getUrl('http://www.mymerchant.com'));
     }
 }

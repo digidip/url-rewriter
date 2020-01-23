@@ -14,11 +14,13 @@
  *
  * 2. Once the container is up and running, go to http://127.0.0.1:1880/
  *
- * 3. Then execute: `~/url-writer $> php tests/UrlWriterRunner.Exec.php
+ * 3. Then execute: `~/url-writer $> php tests/UrlRewriterRunner.Exec.php
  *
  * 4. In the node-red tool, you are able to switch the HTTP status and simulate a timeout event using
  *    the provided buttons.
  */
+
+
 require_once(__DIR__ . '/../vendor/autoload.php');
 
 use digidip\Adapters\FileCircuitBreakerAdapter;
@@ -26,25 +28,34 @@ use digidip\Adapters\FilePathCircuitBreakerAdapter;
 use digidip\CircuitBreaker;
 use digidip\Loggers\NullLogger;
 use digidip\Loggers\StdioLogger;
-use digidip\Modules\Filesystem\StandardFileReader;
-use digidip\Modules\Filesystem\StandardFileWriter;
 use digidip\Modules\Filesystem\TestFileReader;
 use digidip\Modules\Filesystem\TestFileWriter;
 use digidip\Strategies\TemplateRewriterStrategy;
-use digidip\UrlWriter;
+use digidip\UrlRewriter;
 
 $logger = new NullLogger();
 if ($argc >= 2 && in_array('--debug', $argv)) {
     $logger = new StdioLogger();
 }
 
-// $buffer = '';
+$useFile = false;
+if ($argc >= 2 && in_array('--file', $argv)) {
+    $useFile = true;
+}
+
+$buffer = '';
 $count = 0;
 $lastSample = null;
+
+if ($useFile) {
+    $adapter = new FilePathCircuitBreakerAdapter(__DIR__ . '/data.json', $logger);
+} else {
+    $reader = new TestFileReader($buffer);
+    $writer = new TestFileWriter($buffer);
+    $adapter = new FileCircuitBreakerAdapter($reader, $writer, $logger);
+}
+
 while (true) {
-    // $reader = new StandardFileReader($buffer);
-    // $writer = new StandardFileWriter($buffer);
-    $adapter = new FilePathCircuitBreakerAdapter(__DIR__ . '/data.json');
     $circuit = new CircuitBreaker(
         $adapter,
         [
@@ -55,7 +66,7 @@ while (true) {
         $logger
     );
 
-    $rewriter = new UrlWriter(
+    $rewriter = new UrlRewriter(
         $circuit,
         new TemplateRewriterStrategy('http://visit.digidip.net/visit?url={url}'),
         $logger
