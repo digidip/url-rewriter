@@ -2,7 +2,8 @@
 
 namespace digidip\Contracts;
 
-interface CircuitBreakerAdapter {
+interface CircuitBreakerAdapter
+{
     public const DIGIDIP_CHECK_URL = 'https://visit.digidip.net/digi-health-check.php';
 
     function getCircuitState(): bool;

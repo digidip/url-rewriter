@@ -27,7 +27,8 @@ class MemcachedCircuitBreakerAdapter extends BaseCircuitBreakerAdapter implement
         $this->logger = $logger ?? new NullLogger();
     }
 
-    public function setLogger(LoggerInterface $logger) {
+    public function setLogger(LoggerInterface $logger)
+    {
         $this->logger = $logger;
     }
 
@@ -54,7 +55,8 @@ class MemcachedCircuitBreakerAdapter extends BaseCircuitBreakerAdapter implement
         return true;
     }
 
-    public function load(): void {
+    public function load(): void
+    {
         $data = json_decode($this->memcache->get($this->memcachedCacheKey), true);
         if ($data) {
             $this->isOpen = $data['isOpen'] ?? $this->isOpen;
@@ -66,7 +68,8 @@ class MemcachedCircuitBreakerAdapter extends BaseCircuitBreakerAdapter implement
         }
     }
 
-    private function payload(): array {
+    private function payload(): array
+    {
         return [
             'isOpen' => $this->isOpen,
             'lastError' => $this->lastError,

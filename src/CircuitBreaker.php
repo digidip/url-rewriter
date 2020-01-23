@@ -71,14 +71,16 @@ class CircuitBreaker implements LoggerAwareInterface
         $this->initialiseAdapter();
     }
 
-    public function setLogger(LoggerInterface $logger) {
+    public function setLogger(LoggerInterface $logger)
+    {
         $this->logger = $logger;
         if (class_implements($this->adapter, LoggerAwareInterface::class)) {
             $this->adapter->setLogger($this->logger);
         }
     }
 
-    public function evaluateHealth(): void {
+    public function evaluateHealth(): void
+    {
         $this->logger->debug("CircuitBreaker::evaluateHealth() called.");
         $this->adapter->load();
 
@@ -134,7 +136,8 @@ class CircuitBreaker implements LoggerAwareInterface
         return $this->adapter->getCircuitState();
     }
 
-    protected function updateOpenSampleRate(): void {
+    protected function updateOpenSampleRate(): void
+    {
         if ($this->options[self::OPTION_OPENED_SAMPLE_RATE] !== $this->adapter->getSampleRate()) {
             $this->adapter->setSampleRate($this->options[self::OPTION_OPENED_SAMPLE_RATE]);
             $this->logger->debug("CircuitBreaker::evaluateHealth(): Set sample rate to '{$this->options[self::OPTION_OPENED_SAMPLE_RATE]}' in adapter");

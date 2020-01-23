@@ -2,7 +2,8 @@
 
 namespace digidip\Modules\Filesystem\Contracts;
 
-interface FileWriter {
+interface FileWriter
+{
     function write(string $content): void;
     function path(): string;
     function isWritable(): bool;

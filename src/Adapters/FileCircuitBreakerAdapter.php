@@ -33,7 +33,8 @@ class FileCircuitBreakerAdapter extends BaseCircuitBreakerAdapter implements Log
         $this->logger = $logger ?? new NullLogger();
     }
 
-    public function setLogger(LoggerInterface $logger) {
+    public function setLogger(LoggerInterface $logger)
+    {
         $this->logger = $logger;
     }
 
@@ -73,7 +74,8 @@ class FileCircuitBreakerAdapter extends BaseCircuitBreakerAdapter implements Log
         return true;
     }
 
-    public function load(): void {
+    public function load(): void
+    {
         $data = json_decode($this->reader->read(), true);
         if ($data) {
             $this->isOpen = $data['isOpen'] ?? $this->isOpen;
@@ -85,7 +87,8 @@ class FileCircuitBreakerAdapter extends BaseCircuitBreakerAdapter implements Log
         }
     }
 
-    private function payload(): array {
+    private function payload(): array
+    {
         return [
             'isOpen' => $this->isOpen,
             'lastError' => $this->lastError,

@@ -4,7 +4,8 @@ namespace digidip\Adapters;
 
 use digidip\Contracts\CircuitBreakerAdapter;
 
-abstract class BaseCircuitBreakerAdapter implements CircuitBreakerAdapter {
+abstract class BaseCircuitBreakerAdapter implements CircuitBreakerAdapter
+{
     /**
      * @var boolean|null
      */

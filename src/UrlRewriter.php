@@ -1,4 +1,5 @@
 <?php
+
 namespace digidip;
 
 use Psr\Log\LoggerAwareInterface;
@@ -34,12 +35,14 @@ class UrlRewriter implements LoggerAwareInterface
         $this->logger->debug("UrlRewriter::__construct() Called");
     }
 
-    public function setLogger(LoggerInterface $logger) {
+    public function setLogger(LoggerInterface $logger)
+    {
         $this->logger = $logger;
         $this->circuitBreaker->setLogger($this->logger);
     }
 
-    public function getUrl(string $urlToRewrite, array $additionalArguments = []): string {
+    public function getUrl(string $urlToRewrite, array $additionalArguments = []): string
+    {
         $json = json_encode($additionalArguments);
         $this->logger->debug("UrlRewriter::getUrl({$urlToRewrite}, {$json}) called");
         $this->circuitBreaker->evaluateHealth();

@@ -18,7 +18,8 @@ class TestFileWriter implements FileWriter
         $this->data = $content;
     }
 
-    public function path(): string {
+    public function path(): string
+    {
         return 'testing - N/A';
     }
 

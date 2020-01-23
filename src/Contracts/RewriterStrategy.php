@@ -2,6 +2,7 @@
 
 namespace digidip\Contracts;
 
-interface RewriterStrategy {
+interface RewriterStrategy
+{
     function parse(string $url, array $additionalArguments): string;
 }

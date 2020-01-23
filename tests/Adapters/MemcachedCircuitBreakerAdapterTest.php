@@ -100,7 +100,7 @@ class MemcachedCircuitBreakerAdapterTest extends TestCase
 
         $memcached->shouldReceive('set')->once()->with(
             self::TESTING_CACHE_KEY,
-            '{"isOpen":null,"lastError":"Test error","failureCount":1,"lastFailureTimestamp":'. $now->getTimestamp() .',"lastSampleTimestamp":'. $now->getTimestamp() .',"sampleRate":1}'
+            '{"isOpen":null,"lastError":"Test error","failureCount":1,"lastFailureTimestamp":' . $now->getTimestamp() . ',"lastSampleTimestamp":' . $now->getTimestamp() . ',"sampleRate":1}'
         );
         $adapter->persist();
         $this->assertEquals($now->getTimestamp(), $adapter->getLastSampleTimestamp());
@@ -112,14 +112,14 @@ class MemcachedCircuitBreakerAdapterTest extends TestCase
 
         $memcached->shouldReceive('set')->once()->with(
             self::TESTING_CACHE_KEY,
-            '{"isOpen":null,"lastError":"Test error","failureCount":0,"lastFailureTimestamp":'. $now->getTimestamp() .',"lastSampleTimestamp":'. $now1->getTimestamp() .',"sampleRate":5}'
+            '{"isOpen":null,"lastError":"Test error","failureCount":0,"lastFailureTimestamp":' . $now->getTimestamp() . ',"lastSampleTimestamp":' . $now1->getTimestamp() . ',"sampleRate":5}'
         );
         $adapter->persist();
 
         $adapter->clearFailures();
         $memcached->shouldReceive('set')->once()->with(
             self::TESTING_CACHE_KEY,
-            '{"isOpen":null,"lastError":null,"failureCount":0,"lastFailureTimestamp":null,"lastSampleTimestamp":'. $now1->getTimestamp() .',"sampleRate":5}'
+            '{"isOpen":null,"lastError":null,"failureCount":0,"lastFailureTimestamp":null,"lastSampleTimestamp":' . $now1->getTimestamp() . ',"sampleRate":5}'
         );
         $adapter->persist();
         $this->assertEquals($now1->getTimestamp(), $adapter->getLastSampleTimestamp());

@@ -4,7 +4,8 @@ namespace digidip\Strategies;
 
 use digidip\Contracts\RewriterStrategy;
 
-class TemplateRewriterStrategy implements RewriterStrategy {
+class TemplateRewriterStrategy implements RewriterStrategy
+{
     /**
      * @var string
      */
@@ -20,12 +21,14 @@ class TemplateRewriterStrategy implements RewriterStrategy {
     /**
      * @param string $urlTemplate   Example: "https://www.moo.com/visit?url={url}"
      */
-    public function __construct(string $urlTemplate, array $options = []) {
+    public function __construct(string $urlTemplate, array $options = [])
+    {
         $this->urlTemplate = $urlTemplate;
         $this->options = array_merge($this->options, $options);
     }
 
-    public function parse(string $url, array $additionalArguments): string {
+    public function parse(string $url, array $additionalArguments): string
+    {
         $response = str_replace("{url}", $this->encodeValue($url), $this->urlTemplate);
 
         foreach ($additionalArguments as $token => $value) {
@@ -39,7 +42,8 @@ class TemplateRewriterStrategy implements RewriterStrategy {
         return $response;
     }
 
-    private function encodeValue(string $value): string {
+    private function encodeValue(string $value): string
+    {
         return trim($value) ? urlencode($value) : '';
     }
 }

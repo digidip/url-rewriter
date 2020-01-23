@@ -2,7 +2,8 @@
 
 namespace digidip\Modules\Filesystem\Contracts;
 
-interface FileReader {
+interface FileReader
+{
     function read(): string;
     function exists(): bool;
     function path(): string;

@@ -73,17 +73,17 @@ class FileCircuitBreakerAdapterTest extends TestCase
         $adapter->persist();
         $this->assertEquals($now->getTimestamp(), $adapter->getLastSampleTimestamp());
         $this->assertEquals($now->getTimestamp(), $adapter->getLastFailureTimestamp());
-        $this->assertEquals('{"isOpen":null,"lastError":"Test error","failureCount":1,"lastFailureTimestamp":'. $now->getTimestamp() .',"lastSampleTimestamp":'. $now->getTimestamp() .',"sampleRate":1}', $buffer);
+        $this->assertEquals('{"isOpen":null,"lastError":"Test error","failureCount":1,"lastFailureTimestamp":' . $now->getTimestamp() . ',"lastSampleTimestamp":' . $now->getTimestamp() . ',"sampleRate":1}', $buffer);
 
         $now1 = (new DateTime())->modify('+5 seconds');
         $adapter->setSampleRate(5);
         $adapter->registerSuccess(3, $now1);
         $adapter->persist();
-        $this->assertEquals('{"isOpen":null,"lastError":"Test error","failureCount":0,"lastFailureTimestamp":'. $now->getTimestamp() .',"lastSampleTimestamp":'. $now1->getTimestamp() .',"sampleRate":5}', $buffer);
+        $this->assertEquals('{"isOpen":null,"lastError":"Test error","failureCount":0,"lastFailureTimestamp":' . $now->getTimestamp() . ',"lastSampleTimestamp":' . $now1->getTimestamp() . ',"sampleRate":5}', $buffer);
 
         $adapter->clearFailures();
         $adapter->persist();
-        $this->assertEquals('{"isOpen":null,"lastError":null,"failureCount":0,"lastFailureTimestamp":null,"lastSampleTimestamp":'. $now1->getTimestamp() .',"sampleRate":5}', $buffer);
+        $this->assertEquals('{"isOpen":null,"lastError":null,"failureCount":0,"lastFailureTimestamp":null,"lastSampleTimestamp":' . $now1->getTimestamp() . ',"sampleRate":5}', $buffer);
         $this->assertEquals($now1->getTimestamp(), $adapter->getLastSampleTimestamp());
     }
 }
