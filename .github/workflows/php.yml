@@ -8,7 +8,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                php: [7.1, 7.2, 7.3, 7.4]
+                php: [ '7.1', '7.2', '7.3', '7.4' ]
 
             fail-fast: false
         steps:
@@ -19,7 +19,7 @@ jobs:
               run: composer validate
 
             - name: Setup PHP
-              uses: ./
+              uses: nanasess/setup-php@master
               with:
                   php-version: ${{ matrix.php }}
 
