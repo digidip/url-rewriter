@@ -5,16 +5,29 @@
   - [Key Concepts](#key-concepts)
     - [Url Writer](#url-writer)
     - [Circuit Breaker](#circuit-breaker)
-      - [Circuit Breaker Options (`?array $options = []`)](#circuit-breaker-options-array-options)
     - [Url Writer Strategies](#url-writer-strategies)
     - [Circuit Breaker Adapters](#circuit-breaker-adapters)
-  - [Setup / Installation](#setup--installation)
+  - [Setup / Installation](#installation)
   - [Examples](#examples)
 <!-- tocstop -->
 
 This library was created to allow digidip customers to rewrite their affiliate URLs into digidip affiliate URLs for tracking purchases etc. The library takes advantage of a circuit breaker methodology to help reduce the number of users being redirected via digidip's servers when a server or network issue exists. When a server outage is detected, the circuit will become open and all rewritten URLs will be returned as the original URL provided to the library.
 
 If the circuit is open, it means that the transaction can not be tracked by digidip, although a majority of users will experience a positive redirection to the merchant's page instead of experiencing a error page.
+
+## Installation
+
+You may install UrlRewriter via Composer:
+
+    composer require digidip/url-rewriter
+
+### Dependancies
+
+If you wish to use the Memcached or Redis adapter you must install either PECL extensions:
+- Redis         (`pecl install redis`)
+- Memcached     (`pecl install memcached`)
+
+## Examples
 
 ```php
 // Basic example of the implementation.
@@ -30,6 +43,8 @@ $url = $rewriter->getUrl('http://www.merchant.com');
 
 // ... $url is used elsewhere as part of your implementation...
 ```
+
+For more check the examples directory.
 
 ## Key Concepts
 
@@ -95,17 +110,3 @@ Currently available adapters include:
 - File reader and writer interfaces - `FileCircuitBreakerAdapter(Reader, Writer)`, reference `src/Modules/Filesystem` for available Readers and Writers.
 - Redis - `RedisCircuitBreakerAdapter(\Redis instance)`
 - Memcached - `MemcachedCircuitBreakerAdapter(\Memcached instance)`
-
-## Installation
-
-Execute `composer require digidip/url-rewriter` in your project.
-
-### Dependancies
-
-If you wish to use the Memcached or Redis adapter you must install either PECL extensions:
-- Redis         (`pecl install redis`)
-- Memcached     (`pecl install memcached`)
-
-## Examples
-
-Please see the examples directory.
