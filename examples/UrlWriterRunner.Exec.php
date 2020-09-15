@@ -68,7 +68,7 @@ while (true) {
 
     $rewriter = new UrlRewriter(
         $circuit,
-        new TemplateRewriterStrategy('http://visit.digidip.net/visit?url={url}'),
+        new TemplateRewriterStrategy('http://visit.digidip.it/visit?url={url}'),
         $logger
     );
 

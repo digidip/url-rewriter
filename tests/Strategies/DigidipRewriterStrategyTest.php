@@ -13,6 +13,6 @@ class DigidipRewriterStrategyTest extends TestCase
     public function test_parseOfBasicUrl()
     {
         $strategy = new DigidipRewriterStrategy(12345);
-        $this->assertEquals('https://visit.digidip.net/visit?pid=12345&url=https%3A%2F%2Fwww.buymygoods.com', $strategy->parse('https://www.buymygoods.com', []));
+        $this->assertEquals('https://visit.digidip.it/visit?pid=12345&url=https%3A%2F%2Fwww.buymygoods.com', $strategy->parse('https://www.buymygoods.com', []));
     }
 }

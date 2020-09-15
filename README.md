@@ -52,7 +52,7 @@ For more check the examples directory.
 - When the failure count is zero, then the circuit is considered `Closed`.
 - When the failure count is greater than zero, but less than the failure threshold, the circuit is considered `Half-Open`.
 - When the failure count is greater than zero and equal to the failure threshold, the circuit is considered `Open`.
-- When the circuit is `Closed` or `Half-Open`, the UrlRewriter theoretically will convert `https://mymerchant.com` to `http://visit.digidip.net/visit?url=http%3A%2F%2Fmymerchant.com`.
+- When the circuit is `Closed` or `Half-Open`, the UrlRewriter theoretically will convert `https://mymerchant.com` to `http://visit.digidip.it/visit?url=http%3A%2F%2Fmymerchant.com`.
 - When the circuit is `Open`, the UrlRewriter will simply return `https://mymerchant.com` with no rewriter strategy being used.
 
 ### Url Writer

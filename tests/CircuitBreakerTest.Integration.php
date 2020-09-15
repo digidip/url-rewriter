@@ -110,17 +110,17 @@ class CircuitBreakerTest extends TestCase
         $circuitBreaker->evaluateHealth();
 
         $this->assertEquals(3, $adapter->getFailureCount());
-        $this->assertEquals('{"isOpen":true,"lastError":"Client error: `HEAD https:\/\/visit.digidip.net\/digi-health-check.php` resulted in a `404 Not Found` response","failureCount":3,"lastFailureTimestamp":' . $timestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":1}', $buffer);
+        $this->assertEquals('{"isOpen":true,"lastError":"Client error: `HEAD https:\/\/visit.digidip.it\/digi-health-check.php` resulted in a `404 Not Found` response","failureCount":3,"lastFailureTimestamp":' . $timestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":1}', $buffer);
 
         // Close circuit
         $lastFailureTimestamp = clone $timestamp;
         $timestamp = $timestamp->modify('-3 seconds');
         $circuitBreaker->evaluateHealth();
-        $this->assertEquals('{"isOpen":true,"lastError":"Client error: `HEAD https:\/\/visit.digidip.net\/digi-health-check.php` resulted in a `404 Not Found` response","failureCount":2,"lastFailureTimestamp":' . $lastFailureTimestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":1}', $buffer);
+        $this->assertEquals('{"isOpen":true,"lastError":"Client error: `HEAD https:\/\/visit.digidip.it\/digi-health-check.php` resulted in a `404 Not Found` response","failureCount":2,"lastFailureTimestamp":' . $lastFailureTimestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":1}', $buffer);
 
         $timestamp = $timestamp->modify('-3 seconds');
         $circuitBreaker->evaluateHealth();
-        $this->assertEquals('{"isOpen":true,"lastError":"Client error: `HEAD https:\/\/visit.digidip.net\/digi-health-check.php` resulted in a `404 Not Found` response","failureCount":1,"lastFailureTimestamp":' . $lastFailureTimestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":1}', $buffer);
+        $this->assertEquals('{"isOpen":true,"lastError":"Client error: `HEAD https:\/\/visit.digidip.it\/digi-health-check.php` resulted in a `404 Not Found` response","failureCount":1,"lastFailureTimestamp":' . $lastFailureTimestamp->getTimestamp() . ',"lastSampleTimestamp":' . $timestamp->getTimestamp() . ',"sampleRate":1}', $buffer);
 
         $timestamp = $timestamp->modify('-3 seconds');
         $circuitBreaker->evaluateHealth();

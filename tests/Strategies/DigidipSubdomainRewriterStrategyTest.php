@@ -13,6 +13,6 @@ class DigidipSubdomainRewriterStrategyTest extends TestCase
     public function test_parseOfBasicUrl()
     {
         $strategy = new DigidipSubdomainRewriterStrategy('mydomain');
-        $this->assertEquals('https://mydomain.digidip.net/visit?url=https%3A%2F%2Fwww.buymygoods.com', $strategy->parse('https://www.buymygoods.com', []));
+        $this->assertEquals('https://mydomain.digidip.it/visit?url=https%3A%2F%2Fwww.buymygoods.com', $strategy->parse('https://www.buymygoods.com', []));
     }
 }
